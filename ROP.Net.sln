@@ -5,6 +5,10 @@ VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROP.Net", "ROP.Net\ROP.Net.csproj", "{584435D2-787E-40A2-9FF0-EEA913E920E6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROP.Net.Test", "ROP.Net.Test\ROP.Net.Test.csproj", "{C8242B10-A916-479C-BA45-2A2B57C9F6A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROP.Net.Example", "ROP.Net.Example\ROP.Net.Example.csproj", "{7A2E68DF-F3FF-47BF-85DB-44A188F8AA68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{584435D2-787E-40A2-9FF0-EEA913E920E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{584435D2-787E-40A2-9FF0-EEA913E920E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{584435D2-787E-40A2-9FF0-EEA913E920E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8242B10-A916-479C-BA45-2A2B57C9F6A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8242B10-A916-479C-BA45-2A2B57C9F6A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8242B10-A916-479C-BA45-2A2B57C9F6A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8242B10-A916-479C-BA45-2A2B57C9F6A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A2E68DF-F3FF-47BF-85DB-44A188F8AA68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A2E68DF-F3FF-47BF-85DB-44A188F8AA68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A2E68DF-F3FF-47BF-85DB-44A188F8AA68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A2E68DF-F3FF-47BF-85DB-44A188F8AA68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
