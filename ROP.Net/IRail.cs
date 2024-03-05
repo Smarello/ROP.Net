@@ -9,8 +9,8 @@ namespace ROP.Net
     public interface IRail<TSuccess, TFailure>
     {
         bool IsSuccess { get; init; }
-        ITrack<TSuccess>? Success { get; init; }
-        ITrack<TFailure>? Error { get; init; }
+        ISuccessTrack<TSuccess> Success { get; init; }
+        IFailureTrack<TFailure> Error { get; init; }
     }
     
 }

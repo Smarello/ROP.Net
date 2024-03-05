@@ -8,21 +8,32 @@ namespace ROP.Net
 {
     public record Rail<TSuccess, TFailure> : IRail<TSuccess, TFailure>
     {
-        public ITrack<TSuccess>? Success { get; init; }
-        public ITrack<TFailure>? Error { get; init; }
+        public ISuccessTrack<TSuccess> Success { get; init; }
+        public IFailureTrack<TFailure> Error { get; init; }
         public bool IsSuccess { get; init; }
 
-        public static IRail<TSuccess, TFailure> FromSuccessfulTrack(TSuccess successResult) => new Rail<TSuccess, TFailure>
+        private Rail()
+        { }
+
+        public static IRail<TSuccess, TFailure> FromSuccessfulTrack(TSuccess success) 
+            => FromSuccessfulTrack(new Success<TSuccess>(success));
+        
+
+        public static IRail<TSuccess, TFailure> FromSuccessfulTrack(ISuccessTrack<TSuccess> result) => new Rail<TSuccess, TFailure>
         {
             IsSuccess = true,
-            Success = new Success<TSuccess>(successResult)
+            Success = result,
+            Error = new Failure<TFailure>(default)
         };
 
-        public static IRail<TSuccess, TFailure> FromErrorTrack(TFailure error) => new Rail<TSuccess, TFailure>
+        public static IRail<TSuccess, TFailure> FromErrorTrack(TFailure error)
+            => FromErrorTrack(new Failure<TFailure>(error));
+
+        public static IRail<TSuccess, TFailure> FromErrorTrack(IFailureTrack<TFailure> error) => new Rail<TSuccess, TFailure>
         {
             IsSuccess = false,
-            Error = new Failure<TFailure>(error)
+            Error = error,
+            Success = new Success<TSuccess>(default)
         };
-
     }
 }
