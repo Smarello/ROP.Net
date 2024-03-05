@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ROP.Net
 {
-    public interface ISuccessTrack<T> : ITrack<T>
+    public record Success<T>(T result) : ISuccessTrack<T>
     {
-        T GetResult();
+        public T GetResult() => result;
+        
     }
 }

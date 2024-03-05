@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ROP.Net
 {
-    public interface ISuccessTrack<T> : ITrack<T>
+    public record Failure<T>(T failure) : IFailureTrack<T>
     {
-        T GetResult();
+        public T GetError() => failure;
+
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ROP.Net
 {
-    internal interface IErrorTrack<T> : ITrack<T>
+    public interface IFailureTrack<T> : ITrack<T>
     {
         T GetError();
     }
