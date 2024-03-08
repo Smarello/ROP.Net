@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ROP.Net
 {
-    public record Failure<T>(T failure) : IFailureTrack<T>
+    internal record Failure<T>(T failure) : IFailureTrack<T>
     {
         public T GetError() => failure;
 

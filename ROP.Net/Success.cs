@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ROP.Net
 {
-    public record Success<T> : ISuccessTrack<T>
+    internal record Success<T> : ISuccessTrack<T>
     {
       
         private readonly T result;

@@ -14,19 +14,16 @@ namespace ROP.Net.Test
         public void TestThatCallingGatherPeelCutIHaveACutApple()
         {
             var apple = new Apple();
-            var peel = PeelThelApple;
-            var cut = CutTheApple;
+            var peelApple = (Apple apple) => new PeeledApple();
+            var cutApple = (PeeledApple apple) => new CutApple();
 
-            var result = apple.AsSuccessRail<Apple, Exception>()
-                .Then(peel.AdaptToRail())
-                .Then(cut.AdaptToRail());
+            var rail = apple.ToRail<Apple, Exception>()
+                .Then(peelApple.ToRail())
+                .Then(cutApple.ToRail());
            
 
-            Assert.IsInstanceOf<CutApple>(result.Success.GetResult());
+            Assert.IsInstanceOf<CutApple>(rail.Result);
         }
-
-        private PeeledApple PeelThelApple (Apple apple) => new PeeledApple();
-        private CutApple CutTheApple(PeeledApple apple) => new CutApple();
 
         private class Apple {
         }

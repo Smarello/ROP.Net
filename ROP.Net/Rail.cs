@@ -6,11 +6,15 @@ using System.Threading.Tasks;
 
 namespace ROP.Net
 {
-    public record Rail<TSuccess, TFailure> : IRail<TSuccess, TFailure>
+    internal record Rail<TSuccess, TFailure> : IRail<TSuccess, TFailure>
     {
-        public ISuccessTrack<TSuccess> Success { get; init; }
-        public IFailureTrack<TFailure> Error { get; init; }
+        public ISuccessTrack<TSuccess> SuccessTrack { get; init; }
+        public IFailureTrack<TFailure> FailureTrack { get; init; }
         public bool IsSuccess { get; init; }
+
+        public TSuccess Result => SuccessTrack.GetResult();
+
+        public TFailure Error => FailureTrack.GetError();
 
         private Rail()
         { }
@@ -22,8 +26,8 @@ namespace ROP.Net
         public static IRail<TSuccess, TFailure> FromSuccessfulTrack(ISuccessTrack<TSuccess> result) => new Rail<TSuccess, TFailure>
         {
             IsSuccess = true,
-            Success = result,
-            Error = new Failure<TFailure>(default)
+            SuccessTrack = result,
+            FailureTrack = new Failure<TFailure>(default)
         };
 
         public static IRail<TSuccess, TFailure> FromErrorTrack(TFailure error)
@@ -32,8 +36,8 @@ namespace ROP.Net
         public static IRail<TSuccess, TFailure> FromErrorTrack(IFailureTrack<TFailure> error) => new Rail<TSuccess, TFailure>
         {
             IsSuccess = false,
-            Error = error,
-            Success = new Success<TSuccess>(default)
+            FailureTrack = error,
+            SuccessTrack = new Success<TSuccess>(default)
         };
     }
 }
