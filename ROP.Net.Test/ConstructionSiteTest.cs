@@ -22,7 +22,7 @@ namespace ROP.Net.Test
         [Test(Description = "When I try to create a wall without foundation, I should be in the failure track")]
         public void CreateWallWithoutFoundation()
         {
-            IRail<ConstructionSite, string> building = construction.ToSuccessRail<ConstructionSite, string>().Then(Construction.BuildWalls);
+            IRail<ConstructionSite, string> building = construction.ToSuccessRail<ConstructionSite, string>().Then(ConstructionService.BuildWalls);
             Assert.IsFalse(building.IsSuccess);
             Assert.That(building.Error, Is.EqualTo("Construction site must have foundation"));
         }
@@ -31,9 +31,9 @@ namespace ROP.Net.Test
         public void CreateBasicHouse()
         {
             IRail<House, string> building = construction.ToSuccessRail<ConstructionSite, string>()
-                .Then(Construction.BuildFoundation)
-                .Then(Construction.BuildWalls)
-                .Then(Construction.BuildRoof);
+                .Then(ConstructionService.BuildFoundation)
+                .Then(ConstructionService.BuildWalls)
+                .Then(ConstructionService.BuildRoof);
             Assert.IsTrue(building.IsSuccess);
             Assert.That(building.Result, Is.InstanceOf<House>());
         }

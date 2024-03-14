@@ -4,7 +4,7 @@ using ROP.Net.Extensions;
 
 namespace ROP.Net.Example
 {
-    public class Construction
+    public class ConstructionService
     {
         
 
@@ -31,6 +31,21 @@ namespace ROP.Net.Example
             try
             {
                 return construction.Result!.BuildRoof().ToSuccessRail<House, string>();
+            }
+            catch (Exception ex)
+            {
+                return ex.Message.ToFailureRail<House, string>();
+            }
+        }
+
+        public static IRail<House, string> BuildHouse()
+        {
+            try
+            {
+                return new ConstructionSite().ToSuccessRail<ConstructionSite, string>()
+                    .Then(BuildFoundation)
+                    .Then(BuildWalls)
+                    .Then(BuildRoof);
             }
             catch (Exception ex)
             {
