@@ -37,5 +37,15 @@ namespace ROP.Net.Test
             Assert.IsTrue(building.IsSuccess);
             Assert.That(building.Result, Is.InstanceOf<House>());
         }
+
+        [Test(Description = "When ask for a house to ConstructionService, then I get a house")]
+        public void CreateHouseViaService()
+        {
+            IRail<House, string> result = ConstructionService.BuildHouse();
+            Assert.IsTrue(result.IsSuccess);
+            Assert.That(result.Result, Is.InstanceOf<House>());
+        }
+
+
     }
 }

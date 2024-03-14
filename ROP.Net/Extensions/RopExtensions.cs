@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace ROP.Net.Extensions
 {
     public static class RopExtensions
@@ -12,13 +7,13 @@ namespace ROP.Net.Extensions
             => prevResult.IsSuccess switch
                 {
                     true => doWork(prevResult),
-                    false => Rail<TSuccessOut, TFailure>.FromErrorTrack(prevResult.Error)
+                    false => Rail<TSuccessOut, TFailure>.FromErrorTrack(prevResult.Error!)
                 };
 
-        public static IRail<TSuccessOut, TFailure> Then<TSuccessIn, TSuccessOut, TFailure>(this IRail<TSuccessIn, TFailure> prevResult, Func<TSuccessIn, IRail<TSuccessOut, TFailure>> doWork)
+        public static IRail<TSuccessOut, TFailure> Then<TSuccessIn, TSuccessOut, TFailure>(this IRail<TSuccessIn, TFailure> prevResult, Func<TSuccessIn?, IRail<TSuccessOut, TFailure>> doWork)
             => prevResult.Then(doWork.WithRailArguments());
 
-        private static Func<IRail<TSuccessIn, TFailure>, IRail<TSuccessOut, TFailure>> WithRailArguments<TSuccessIn, TSuccessOut, TFailure>(this Func<TSuccessIn, IRail<TSuccessOut, TFailure>> functionToBind)
+        private static Func<IRail<TSuccessIn, TFailure>, IRail<TSuccessOut, TFailure>> WithRailArguments<TSuccessIn, TSuccessOut, TFailure>(this Func<TSuccessIn?, IRail<TSuccessOut, TFailure>> functionToBind)
             => (IRail<TSuccessIn, TFailure> input) => functionToBind(input.Result);
 
 
@@ -35,7 +30,7 @@ namespace ROP.Net.Extensions
               {
                   try
                   {
-                      return functionToMap(input.Result).ToSuccessRail<TSuccessOut, Exception>();
+                      return functionToMap(input.Result!).ToSuccessRail<TSuccessOut, Exception>();
                   }
                   catch (Exception ex)
                   {
