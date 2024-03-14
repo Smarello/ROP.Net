@@ -10,10 +10,10 @@ namespace ROP.Net.Extensions
     {
         public static IRail<TSuccessOut, TFailure> Then<TSuccessIn, TSuccessOut, TFailure>(this IRail<TSuccessIn, TFailure> prevResult, Func<IRail<TSuccessIn, TFailure>, IRail<TSuccessOut, TFailure>> doWork) 
             => prevResult.IsSuccess switch
-            {
-                true => doWork(prevResult),
-                false => Rail<TSuccessOut, TFailure>.FromErrorTrack(prevResult.FailureTrack)
-            };
+                {
+                    true => doWork(prevResult),
+                    false => Rail<TSuccessOut, TFailure>.FromErrorTrack(prevResult.Error)
+                };
 
         public static IRail<TSuccessOut, TFailure> Then<TSuccessIn, TSuccessOut, TFailure>(this IRail<TSuccessIn, TFailure> prevResult, Func<TSuccessIn, IRail<TSuccessOut, TFailure>> doWork)
             => prevResult.Then(doWork.WithRailArguments());
@@ -23,32 +23,19 @@ namespace ROP.Net.Extensions
 
 
 
-        public static IRail<TSuccess, TFailure> ToRail<TSuccess, TFailure>(this TSuccess input)
-        {
-            return Rail<TSuccess, TFailure>.FromSuccessfulTrack(input);
-        }
+        public static IRail<TSuccess, TFailure> ToSuccessRail<TSuccess, TFailure>(this TSuccess input) =>
+        Rail<TSuccess, TFailure>.FromSuccessfulTrack(input);
 
+        public static IRail<TSuccess, TFailure> ToFailureRail<TSuccess, TFailure>(this TFailure input) =>
+        Rail<TSuccess, TFailure>.FromErrorTrack(input);
 
-        //public static Func<IRail<TSuccessIn, Exception>, IRail<TSuccessOut, Exception>> ToRail<TSuccessIn, TSuccessOut>(this Func<TSuccessIn, TSuccessOut> functionToMap)
-        //    => (IRail<TSuccessIn, Exception> input) =>
-        //        input.Then((TSuccessIn inputThen) =>
-        //            {
-        //                try
-        //                {
-        //                    return functionToMap(inputThen).ToRail<TSuccessOut, Exception>();
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                    return Rail<TSuccessOut, Exception>.FromErrorTrack(ex);
-        //                }
-        //            });
 
         public static Func<IRail<TSuccessIn, Exception>, IRail<TSuccessOut, Exception>> ToRail<TSuccessIn, TSuccessOut>(this Func<TSuccessIn, TSuccessOut> functionToMap)
           => (IRail<TSuccessIn, Exception> input) =>
               {
                   try
                   {
-                      return functionToMap(input.Result).ToRail<TSuccessOut, Exception>();
+                      return functionToMap(input.Result).ToSuccessRail<TSuccessOut, Exception>();
                   }
                   catch (Exception ex)
                   {

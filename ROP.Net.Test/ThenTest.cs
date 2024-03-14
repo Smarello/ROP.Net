@@ -17,7 +17,7 @@ namespace ROP.Net.Test
             var peelApple = (Apple apple) => new PeeledApple();
             var cutApple = (PeeledApple apple) => new CutApple();
 
-            var rail = apple.ToRail<Apple, Exception>()
+            var rail = apple.ToSuccessRail<Apple, Exception>()
                 .Then(peelApple.ToRail())
                 .Then(cutApple.ToRail());
            
