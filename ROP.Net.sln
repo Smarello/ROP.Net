@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROP.Net.Test", "ROP.Net.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ROP.Net.Example", "ROP.Net.Example\ROP.Net.Example.csproj", "{7A2E68DF-F3FF-47BF-85DB-44A188F8AA68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ROP.Net.Draft", "ROP.Net.Draft\ROP.Net.Draft.csproj", "{7078EADC-DB09-40F1-BBD5-8A55D4CCA026}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{7A2E68DF-F3FF-47BF-85DB-44A188F8AA68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A2E68DF-F3FF-47BF-85DB-44A188F8AA68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A2E68DF-F3FF-47BF-85DB-44A188F8AA68}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7078EADC-DB09-40F1-BBD5-8A55D4CCA026}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7078EADC-DB09-40F1-BBD5-8A55D4CCA026}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7078EADC-DB09-40F1-BBD5-8A55D4CCA026}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7078EADC-DB09-40F1-BBD5-8A55D4CCA026}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
