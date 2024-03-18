@@ -13,6 +13,25 @@ namespace ROP.Net.Extensions
         public static IRail<TSuccessOut, TFailure> Then<TSuccessIn, TSuccessOut, TFailure>(this IRail<TSuccessIn, TFailure> prevResult, Func<TSuccessIn?, IRail<TSuccessOut, TFailure>> doWork)
             => prevResult.Then(doWork.WithRailArguments());
 
+        public static async Task<IRail<TSuccessOut, TFailure>> ThenAsync<TSuccessIn, TSuccessOut, TFailure>(this Task<IRail<TSuccessIn, TFailure>> prevResult, Func<IRail<TSuccessIn, TFailure>, Task<IRail<TSuccessOut, TFailure>>> doWork, int timeoutMilliseconds = 5000)
+        {
+            if (!prevResult.IsCompleted)
+                await prevResult.WaitAsync(TimeSpan.FromSeconds(timeoutMilliseconds));
+            if (!prevResult.IsCompleted)
+                throw new TimeoutException($"The task was not completed within the specified timeout ({timeoutMilliseconds} ms)");
+
+            return prevResult.Result.IsSuccess switch
+            {
+                true => await doWork(prevResult.Result),
+                false => Rail<TSuccessOut, TFailure>.FromErrorTrack(prevResult.Result.Error!)
+            };
+        }
+
+        public static async Task<IRail<TSuccessOut, TFailure>> ThenAsync<TSuccessIn, TSuccessOut, TFailure>(this IRail<TSuccessIn, TFailure> prevResult, Func<IRail<TSuccessIn, TFailure>, Task<IRail<TSuccessOut, TFailure>>> doWork, int timeoutMilliseconds = 5000)
+            => await Task.FromResult(prevResult).ThenAsync(doWork, timeoutMilliseconds);
+
+
+
         private static Func<IRail<TSuccessIn, TFailure>, IRail<TSuccessOut, TFailure>> WithRailArguments<TSuccessIn, TSuccessOut, TFailure>(this Func<TSuccessIn?, IRail<TSuccessOut, TFailure>> functionToBind)
             => (IRail<TSuccessIn, TFailure> input) => functionToBind(input.Result);
 
