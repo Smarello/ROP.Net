@@ -14,8 +14,6 @@ namespace ROP.Net.Test
         [Test]
         public async Task TestThatCallingThenAsyncWithUncompletedTaskItGetsExecuted()
         {
-            var apple = new Apple();
-
             Task<IRail<Apple, string>> CreateApple = new Task<IRail<Apple, string>>(() =>
             {
                 Thread.Sleep(500);
@@ -34,7 +32,24 @@ namespace ROP.Net.Test
             Assert.NotNull(peeledApple.Result);
 
         }
-         
+
+        [Test]
+        public async Task TestThatCallingThenAsyncOnANonRailOnbjectGetsTheTaskExecuted()
+        {
+            var apple = new Apple();
+
+            async Task<IRail<PeeledApple, string>> PeelAppleAsync(IRail<Apple, string> apple)
+            {
+                await Task.Delay(500);
+                return new PeeledApple().ToSuccessRail<PeeledApple, string>();
+            }
+
+            IRail<PeeledApple, string> peeledApple = await apple.ThenAsync(PeelAppleAsync);
+
+            Assert.IsTrue(peeledApple.IsSuccess);
+            Assert.NotNull(peeledApple.Result);
+
+        }
 
         [Test]
         public void TestThatCallingGatherPeelCutIHaveACutApple()
