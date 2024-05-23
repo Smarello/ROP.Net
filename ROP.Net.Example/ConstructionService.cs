@@ -1,5 +1,4 @@
-﻿
-using ROP.Net.Example.Domain;
+﻿using ROP.Net.Example.Domain;
 using ROP.Net.Extensions;
 
 namespace ROP.Net.Example
@@ -43,7 +42,7 @@ namespace ROP.Net.Example
             try
             {
                 return new ConstructionSite().ToSuccessRail<ConstructionSite, string>()
-                    .Then(BuildFoundation)
+                    .Then(WithErrorHandling<ConstructionSite, ConstructionSite>(BuildFoundation))
                     .Then(BuildWalls)
                     .Then(BuildRoof);
             }
@@ -52,5 +51,20 @@ namespace ROP.Net.Example
                 return ex.Message.ToFailureRail<House, string>();
             }
         }
+
+        private static Func<IRail<TIn, string>, IRail<TOut, string>> WithErrorHandling<TIn, TOut>(Func<IRail<TIn, string>, IRail<TOut, string>> doWork) =>
+            (input) =>
+            {
+                try
+                {
+                    return doWork(input);
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message.ToFailureRail<TOut, string>();
+                }
+            };
+
     }
+
 }
