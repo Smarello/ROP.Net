@@ -58,6 +58,35 @@ namespace ROP.Net.Test
         }
 
         [Test]
+        public async Task TestThenAsyncOnAFuncWithoutParameters()
+        {
+            var apple = new Apple();
+
+
+            async Task<IRail<Apple, Exception>> CreateApple()
+            {
+                await Task.Delay(500);
+                return new Apple().ToSuccessRail<Apple, Exception>();
+            }
+
+            async Task<IRail<PeeledApple, Exception>> PeelAppleAsync(IRail<Apple, Exception> apple)
+            {
+                await Task.Delay(500);
+                return new PeeledApple().ToSuccessRail<PeeledApple, Exception>();
+            }
+
+            IRail<PeeledApple, Exception> peeledApple = await new object().
+                ToSuccessRail<object, Exception>()
+                .ThenAsync(CreateApple)
+                .ThenAsync(PeelAppleAsync);
+
+
+            Assert.IsTrue(peeledApple.IsSuccess);
+            Assert.NotNull(peeledApple.Result);
+
+        }
+
+        [Test]
         public void TestThatCallingGatherPeelCutIHaveACutApple()
         {
             var apple = new Apple();
