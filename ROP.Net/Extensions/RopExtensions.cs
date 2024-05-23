@@ -10,11 +10,17 @@ namespace ROP.Net.Extensions
                     false => Rail<TSuccessOut, TFailure>.FromErrorTrack(prevResult.Error!)
                 };
 
-        public static IRail<TSuccessOut, TFailure> Then<TSuccessIn, TSuccessOut, TFailure>(this IRail<TSuccessIn, TFailure> prevResult, Func<TSuccessIn?, IRail<TSuccessOut, TFailure>> doWork)
+        public static IRail<TSuccessOut, TFailure> Then<TSuccessIn, TSuccessOut, TFailure>
+            (this IRail<TSuccessIn, TFailure> prevResult, Func<TSuccessIn?, IRail<TSuccessOut, TFailure>> doWork)
             => prevResult.Then(doWork.WithRailArguments());
 
-        public static async Task<IRail<TSuccessOut, TFailure>> ThenAsync<TSuccessIn, TSuccessOut, TFailure>(this Task<IRail<TSuccessIn, TFailure>> prevResult, Func<IRail<TSuccessIn, TFailure>, Task<IRail<TSuccessOut, TFailure>>> doWork, int timeoutMilliseconds = 5000)
+        public static async Task<IRail<TSuccessOut, TFailure>> ThenAsync<TSuccessIn, TSuccessOut, TFailure>
+            (this Task<IRail<TSuccessIn, TFailure>> prevResult, 
+            Func<IRail<TSuccessIn, TFailure>, Task<IRail<TSuccessOut, TFailure>>> doWork, 
+            int timeoutMilliseconds = 5000)
         {
+            if (prevResult.Status == TaskStatus.Created)
+                prevResult.Start();
             if (!prevResult.IsCompleted)
                 await prevResult.WaitAsync(TimeSpan.FromSeconds(timeoutMilliseconds));
             if (!prevResult.IsCompleted)
@@ -27,7 +33,10 @@ namespace ROP.Net.Extensions
             };
         }
 
-        public static async Task<IRail<TSuccessOut, TFailure>> ThenAsync<TSuccessIn, TSuccessOut, TFailure>(this IRail<TSuccessIn, TFailure> prevResult, Func<IRail<TSuccessIn, TFailure>, Task<IRail<TSuccessOut, TFailure>>> doWork, int timeoutMilliseconds = 5000)
+        public static async Task<IRail<TSuccessOut, TFailure>> ThenAsync<TSuccessIn, TSuccessOut, TFailure>
+            (this IRail<TSuccessIn, TFailure> prevResult, 
+            Func<IRail<TSuccessIn, TFailure>, Task<IRail<TSuccessOut, TFailure>>> doWork, 
+            int timeoutMilliseconds = 5000)
             => await Task.FromResult(prevResult).ThenAsync(doWork, timeoutMilliseconds);
 
 

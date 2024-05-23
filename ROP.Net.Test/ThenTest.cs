@@ -1,5 +1,6 @@
 using ROP.Net.Extensions;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
 
 namespace ROP.Net.Test
 {
@@ -9,6 +10,31 @@ namespace ROP.Net.Test
         public void Setup()
         {
         }
+
+        [Test]
+        public async Task TestThatCallingThenAsyncWithUncompletedTaskItGetsExecuted()
+        {
+            var apple = new Apple();
+
+            Task<IRail<Apple, string>> CreateApple = new Task<IRail<Apple, string>>(() =>
+            {
+                Thread.Sleep(500);
+                return new Apple().ToSuccessRail<Apple, string>();
+            });
+
+            async Task<IRail<PeeledApple, string>> PeelAppleAsync(IRail<Apple, string> apple)
+            {
+                await Task.Delay(500);
+                return new PeeledApple().ToSuccessRail<PeeledApple, string>();
+            }
+
+            IRail<PeeledApple, string> peeledApple = await CreateApple.ThenAsync(PeelAppleAsync);
+
+            Assert.IsTrue(peeledApple.IsSuccess);
+            Assert.NotNull(peeledApple.Result);
+
+        }
+         
 
         [Test]
         public void TestThatCallingGatherPeelCutIHaveACutApple()
