@@ -4,7 +4,8 @@ namespace ROP.Net.Extensions
     public static class ThenExtension
     {
         public static IRail<TOut, TFailure> Then<TIn, TOut, TFailure>
-            (this IRail<TIn, TFailure> prevResult, Func<IRail<TIn, TFailure>, IRail<TOut, TFailure>> doWork)
+            (this IRail<TIn, TFailure> prevResult, 
+            Func<IRail<TIn, TFailure>, IRail<TOut, TFailure>> doWork)
             => prevResult.IsSuccess switch
             {
                 true => doWork(prevResult),
@@ -12,8 +13,19 @@ namespace ROP.Net.Extensions
             };
 
         public static IRail<TOut, TFailure> Then<TIn, TOut, TFailure>
-            (this IRail<TIn, TFailure> prevResult, Func<TIn?, IRail<TOut, TFailure>> doWork)
+            (this IRail<TIn, TFailure> prevResult, 
+            Func<TIn?, IRail<TOut, TFailure>> doWork)
             => prevResult.Then(doWork.WithRailArguments());
+
+        public static IRail<TOut, TFailure> Then<TIn, TOut, TFailure>
+            (this IRail<TIn, TFailure> prevResult,
+            Func<IRail<TOut, TFailure>> doWork)
+             => prevResult.IsSuccess switch
+             {
+                 true => doWork(),
+                 false => Rail<TOut, TFailure>.FromErrorTrack(prevResult.Error!)
+             };
+
 
         private static Func<IRail<TIn, TFailure>, IRail<TOut, TFailure>> WithRailArguments<TIn, TOut, TFailure>
             (this Func<TIn?, IRail<TOut, TFailure>> functionToBind)

@@ -38,13 +38,19 @@ namespace ROP.Net.Test
         {
             var apple = new Apple();
 
-            async Task<IRail<PeeledApple, string>> PeelAppleAsync(IRail<Apple, string> apple)
+            Func<Apple> CreateApple = () => new Apple();            
+
+            async Task<IRail<PeeledApple, Exception>> PeelAppleAsync(IRail<Apple, Exception> apple)
             {
                 await Task.Delay(500);
-                return new PeeledApple().ToSuccessRail<PeeledApple, string>();
+                return new PeeledApple().ToSuccessRail<PeeledApple, Exception>();
             }
 
-            IRail<PeeledApple, string> peeledApple = await apple.ThenAsync(PeelAppleAsync);
+            IRail<PeeledApple, Exception> peeledApple = await new object().
+                ToSuccessRail<object, Exception>()
+                .Then(CreateApple.ToRail())
+                .ThenAsync(PeelAppleAsync);
+
 
             Assert.IsTrue(peeledApple.IsSuccess);
             Assert.NotNull(peeledApple.Result);
@@ -66,10 +72,8 @@ namespace ROP.Net.Test
             Assert.IsInstanceOf<CutApple>(rail.Result);
         }
 
-        private class Apple {
-        }
-        private class PeeledApple {
-        }
+        private class Apple { }
+        private class PeeledApple { }
         private class CutApple { }
     }
 }

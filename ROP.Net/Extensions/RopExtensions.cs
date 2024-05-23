@@ -11,7 +11,8 @@ namespace ROP.Net.Extensions
         Rail<TSuccess, TFailure>.FromErrorTrack(input);
 
 
-        public static Func<IRail<TSuccessIn, Exception>, IRail<TSuccessOut, Exception>> ToRail<TSuccessIn, TSuccessOut>(this Func<TSuccessIn, TSuccessOut> functionToMap)
+        public static Func<IRail<TSuccessIn, Exception>, IRail<TSuccessOut, Exception>> ToRail<TSuccessIn, TSuccessOut>
+            (this Func<TSuccessIn, TSuccessOut> functionToMap)
           => (IRail<TSuccessIn, Exception> input) =>
               {
                   try
@@ -25,8 +26,21 @@ namespace ROP.Net.Extensions
               };
 
 
-        public static Func<IRail<TSuccess, Exception>, IRail<TSuccess, Exception>> ToRail<TSuccess>(this Action<TSuccess> functionToTee)
+        public static Func<IRail<TSuccessIn, Exception>, IRail<TSuccessIn, Exception>> ToRail<TSuccessIn>(this Action<TSuccessIn> functionToTee)
             => functionToTee.ToFunc().ToRail();
+
+        public static Func<IRail<TSuccessOut, Exception>> ToRail<TSuccessOut>(this Func<TSuccessOut> functionToMap)
+            => () =>
+            {
+                try
+                {
+                    return functionToMap().ToSuccessRail<TSuccessOut, Exception>();
+                }
+                catch (Exception ex)
+                {
+                    return Rail<TSuccessOut, Exception>.FromErrorTrack(ex);
+                }
+            };
 
 
         private static Func<T, T> ToFunc<T>(this Action<T> functionToTee) =>

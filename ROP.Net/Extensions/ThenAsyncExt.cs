@@ -28,9 +28,8 @@ namespace ROP.Net.Extensions
             int timeoutMilliseconds = 5000)
             => await Task.FromResult(prevResult).ThenAsync(doWork, timeoutMilliseconds);
 
+        
+           
 
-        private static Func<IRail<TIn, TFailure>, IRail<TOut, TFailure>> WithRailArguments<TIn, TOut, TFailure>
-            (this Func<TIn?, IRail<TOut, TFailure>> functionToBind)
-            => (IRail<TIn, TFailure> input) => functionToBind(input.Result);
     }
 }
